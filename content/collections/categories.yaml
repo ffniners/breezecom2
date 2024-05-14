@@ -1,0 +1,17 @@
+title: Categories
+sections:
+  main:
+    display: Main
+    fields:
+      -
+        handle: title
+        field:
+          type: text
+          required: true
+      -
+        handle: slug
+        field:
+          type: slug
+          required: true
+          generate: true
+          from: title

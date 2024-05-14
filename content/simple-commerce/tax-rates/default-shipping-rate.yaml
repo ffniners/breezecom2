@@ -1,0 +1,6 @@
+id: default-shipping-rate
+name: 'Default - Shipping'
+rate: 0
+category: shipping
+zone: everywhere
+include_in_price: false
