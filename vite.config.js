@@ -2,13 +2,17 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import mkcert from 'vite-plugin-mkcert'
+import fs from 'fs';
 
 export default defineConfig({
     server: {
         
-        host: '0.0.0.0',
-        https: true, 
-        // ...
+        host: 'breezecom2.test',
+        https: {
+            key: fs.readFileSync('breezecom2.test.key'),
+            cert: fs.readFileSync('breezecom2.test.crt'),
+          },
+        // '0.0.0.0'
     },
     plugins: [
         mkcert(),
