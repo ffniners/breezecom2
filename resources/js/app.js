@@ -2,6 +2,8 @@ import { createApp } from 'vue';
 import Home from './Pages/Home.vue';
 import Product from './Pages/Product.vue'; 
 import Cart from './Pages/Cart.vue';
+import './bootstrap';
+import '../css/app.css'
 
 createApp({
 

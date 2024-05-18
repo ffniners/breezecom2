@@ -85,7 +85,7 @@ export default {
     },
     redirectToCheckout() {
       // Redirect to the checkout page
-      window.location.href = '/checkout';
+      window.location.href = '/payment'
     },
   },
 };

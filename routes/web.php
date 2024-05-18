@@ -35,14 +35,21 @@ Route::get('/', function () {
 Route::get('/product/{product_id}', [ProductController::class, 'show'])->name('product.show'); 
 
 
+
 Route::get('/cart', function () {
     return view('cart');
 }); 
 
+
+Route::get('/payment', function () {
+    return view('payment');
+});
+
+/*
 Route::get('/checkout', function () {
     return view('checkout');
 });
-
+*/
 
 
 

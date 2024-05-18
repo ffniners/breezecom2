@@ -661,16 +661,16 @@
         },
         {
             "name": "duncanmcclean/simple-commerce",
-            "version": "v6.3.0",
+            "version": "v6.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/duncanmcclean/simple-commerce.git",
-                "reference": "1207d00cb6f2a00791e72839977d2df657d61958"
+                "reference": "e5a2aedce402c0fc87f8931721ffbd827f04c38f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/duncanmcclean/simple-commerce/zipball/1207d00cb6f2a00791e72839977d2df657d61958",
-                "reference": "1207d00cb6f2a00791e72839977d2df657d61958",
+                "url": "https://api.github.com/repos/duncanmcclean/simple-commerce/zipball/e5a2aedce402c0fc87f8931721ffbd827f04c38f",
+                "reference": "e5a2aedce402c0fc87f8931721ffbd827f04c38f",
                 "shasum": ""
             },
             "require": {
@@ -721,9 +721,9 @@
             "description": "A simple, yet powerful e-commerce addon for Statamic.",
             "support": {
                 "issues": "https://github.com/duncanmcclean/simple-commerce/issues",
-                "source": "https://github.com/duncanmcclean/simple-commerce/tree/v6.3.0"
+                "source": "https://github.com/duncanmcclean/simple-commerce/tree/v6.3.1"
             },
-            "time": "2024-04-27T12:04:11+00:00"
+            "time": "2024-05-11T12:55:02+00:00"
         },
         {
             "name": "egulias/email-validator",

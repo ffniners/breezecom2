@@ -32,7 +32,7 @@ export default {
       }
     },
     mounted() {
-        console.log(this.data); // Log the value of products when the component is mounted
+        console.log(this.products); // Log the value of products when the component is mounted
     }
 }
 </script>

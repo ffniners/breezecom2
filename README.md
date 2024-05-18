@@ -140,66 +140,183 @@ $cartitems = Statamic::tag('sc:cart:items')->fetch();
 
 
 
+<!-- views/payment.blade.php -->
 
-    *
- import ErrorsPanel from './components/ErrorsPanel.vue';
- import RemoveFromCartForm from './components/RemoveFromCartForm.vue';
- import UpdateItemForm from './components/UpdateItemForm.vue';
- import ButtonComponent from './components/ButtonComponent.vue';
- */
-export default {
-  props: {
+@extends('layouts.app')
 
-    grandtotal: {
-      type: String,
-      required: true
-    },
-    cartitems: {
-      type: Array,
-      required: true
-    },
-    itemstotal: {
-      type: String,
-      required: true
-    },
-    removeItemForm: {
-      type: String,
-      required: true,
+@section('title', 'payment')
+
+@section('content')
+@php
+
+@endphp
+
+  
+@antlers
+---
+title: Checkout
+---
+
+<h1>Checkout</h1>
+
+{{ sc:cart:items }}
+  <div>
+    <h3>{{ product:title }}</h3>
+    <p>Quantity: {{ quantity }}</p>
+    <p>Price: {{ price }}</p>
+  </div>
+{{ /sc:cart:items }}
+
+<h2>Payment</h2>
+
+{{ sc:gateways }}
+  {{ if gateway == "DuncanMcClean\SimpleCommerce\Gateways\Builtin\StripeGateway" }}
+    <div>
+      <h3>Stripe Payment</h3>
+      <div>
+        <div id="payment-element">
+          <!--Stripe.js injects the Payment Element-->
+        </div>
+        <div id="payment-message" class="hidden"></div>
+      </div>
+      <input id="stripePaymentMethod" type="hidden" name="payment_method">
+    </div>
+  {{ /if }}
+{{ /sc:gateways }}
+
+<button id="checkout-button" onclick="confirmPayment()">Pay Now</button>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  var stripe = Stripe('pk_test_51PDBNlFaRyB6tux2qGsdXR5qx9ikHtt6cKkl2l64Y9skAwYyHwbiPFO3CA5IDPXD4t1DcYjAiQQU0hJSGuDlgAtH00wJAHMfSi');
+
+  let elements;
+
+  checkStatus();
+
+  elements = stripe.elements({
+    clientSecret: '{{ stripe:client_secret }}'
+  });
+  console.log('Client Secret:', elements.clientSecret);
+  console.log("cat");
+
+  const paymentElementOptions = {
+    layout: "tabs",
+  };
+
+  const paymentElement = elements.create("payment", paymentElementOptions);
+  paymentElement.mount("#payment-element");
+
+  async function confirmPayment() {
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: "{{ stripe:callback_url }}",
+      },
+    });
+
+    if (error.type === "card_error" || error.type === "validation_error") {
+      showMessage(error.message);
+    } else {
+      showMessage("An unexpected error occurred.");
+    }
+  }
+
+  // Fetches the payment intent status after payment submission
+  async function checkStatus() {
+    const clientSecret = new URLSearchParams(window.location.search).get(
+      "payment_intent_client_secret"
+    );
+
+    if (!clientSecret) {
+      return console.log("wed");
     }
 
-  },
-  mounted() {
-    console.log(this.cartitems); // Log the value of products when the component is mounted
-  },
+    const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);
 
-  data() {
-    return {
-      items: [],
-      hasItems: false,
-      cartCount: 0,
-    };
-  },
-  
-    methods: {
-    async removeItem(itemId) {
-      console.log(itemId)
-      try {
-        const response = await fetch(`/!/simple-commerce/cart-items/${itemId}`, {
-          method: 'DELETE',
-          headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-          },
-        });
+    switch (paymentIntent.status) {
+      case "succeeded":
+        showMessage("Payment succeeded!");
+        break;
+      case "processing":
+        showMessage("Your payment is processing.");
+        break;
+      case "requires_payment_method":
+        showMessage("Your payment was not successful, please try again.");
+        break;
+      default:
+        showMessage("Something went wrong.");
+        break;
+    }
+  }
 
-        if (response.ok) {
-          // Item removed successfully, update the cart items in the component
-          this.cartItems = this.cartItems.filter(item => item.id !== itemId);
-        } else {
-          // Handle the error case
-          console.error('Error removing item from cart');
-        }
-      } catch (error) {
-        console.error('Error removing item from cart', error);
-      }
+  // ------- UI helpers -------
+
+  function showMessage(messageText) {
+    const messageContainer = document.querySelector("#payment-message");
+
+    messageContainer.classList.remove("hidden");
+    messageContainer.textContent = messageText;
+
+    setTimeout(function () {
+      messageContainer.classList.add("hidden");
+      messageText.textContent = "";
+    }, 4000);
+  }
+</script>
+
+@endantlers
+
+@endsection
+@section('scripts')
+
+@endsection
+
+
+
+
+
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue';
+
+
+
+export default defineConfig({
+    plugins: [
+        vue(), 
+        laravel({
+            input: [ 'resources/js/app.js'],
+            refresh: true,
+            detectTls: 'breezecom2.test',
+            //ssr: 'resources/js/ssr.js',
+           
+            postcssPlugins: [
+                require('tailwindcss'),
+            ],
+           
+           
+        }),
+    ],
+    /*
+    server: {
+        https: true,
+        host: 'localhost',
+      },
+      */
+      server: { 
+        https: true,
+        host: true,
+        port: 3009,
+        hmr: {host: 'localhost', protocol: 'ws'},
+      cors: {
+        origin: 'https://breezecom2.test',
+        methods: ['GET', 'POST'],
+        allowedHeaders: ['Content-Type', 'X-Requested-With', 'X-CSRF-TOKEN'],
+    },},
+    resolve: {
+        alias: {
+            'vue': 'vue/dist/vue.esm-bundler.js',
+        },
     },
-  },
+});
