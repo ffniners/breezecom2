@@ -7,7 +7,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <div v-for="product in products" :key="product.id" class="bg-white rounded-lg shadow-md p-4">
               <a :href="'/product/' + product.id">
-                <img :src="product.image" :alt="product.title" class="w-full h-48 object-cover mb-4">
+                <img :src="product.photo[0].path" :alt="product.title" class="w-full h-48 object-cover mb-4">
                 <h2 class="text-xl font-semibold mb-2">{{ product.title }}</h2>
                 <p class="text-gray-600 mb-4">{{ product.description }}</p>
                 <div class="flex justify-between items-center">

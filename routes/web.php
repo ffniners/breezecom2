@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\HomeController;
@@ -13,6 +12,39 @@ use Illuminate\Support\Str;
 use Statamic\Facades\Site;
 use Illuminate\Support\Facades\Log;
 
+
+
+use DuncanMcClean\SimpleCommerce\Http\Controllers\CartItemController;
+use DuncanMcClean\SimpleCommerce\Http\Controllers\CheckoutController;
+use DuncanMcClean\SimpleCommerce\Http\Controllers\CouponController;
+use DuncanMcClean\SimpleCommerce\Http\Controllers\CustomerController;
+use DuncanMcClean\SimpleCommerce\Http\Controllers\DigitalProducts\DownloadController;
+use DuncanMcClean\SimpleCommerce\Http\Controllers\DigitalProducts\VerificationController;
+use DuncanMcClean\SimpleCommerce\Http\Controllers\GatewayCallbackController;
+use DuncanMcClean\SimpleCommerce\Http\Controllers\GatewayWebhookController;
+use DuncanMcClean\SimpleCommerce\Http\Middleware\EnsureFormParametersArriveIntact;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+
+
+
+Route::name('simple-commerce.')->group(function () {
+    Route::post('/checkout', [CheckoutController::class, '__invoke'])->name('checkout.store');
+    Route::get('/gateways/{gateway}/callback', [GatewayCallbackController::class, 'index'])->name('gateways.callback');
+
+    Route::post('/gateways/{gateway}/webhook', [GatewayWebhookController::class, 'index'])
+        ->name('gateways.webhook')
+        ->withoutMiddleware([VerifyCsrfToken::class]);
+        Route::post('/checkout', [CheckoutController::class, '__invoke'])->name('checkout.store');
+/*
+        Route::get('/payment', function () {
+            return view('payment');
+        })->name('checkout.form');
+  */
+
+});
+
+
+//*.
 
 
 
@@ -41,10 +73,26 @@ Route::get('/cart', function () {
 }); 
 
 
+
+
 Route::get('/payment', function () {
     return view('payment');
 });
 
+
+Route::get('/_stripe', function () {
+    return view('/gateways/_stripe');
+});
+
+Route::get('/stripepayment', function () {
+    return view('/stripepayment');
+});
+
+
+
+Route::get('/welcome', function () {
+    return view('/welcome');
+});
 /*
 Route::get('/checkout', function () {
     return view('checkout');

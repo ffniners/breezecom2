@@ -25,7 +25,7 @@ $cartitems = Statamic::tag('sc:cart:items')->fetch();
 
     <div id="app">
         <div>
-            wedwedwed
+
         </div>
         <Product :product="{{ $product }}" :form-attrs="{{ json_encode($form['attrs'])}}" :form-params="{{ json_encode($formParams) }}" :product-id="{{ json_encode($productId)}}" cartitems="{{json_encode($cartitems)}}">
         </Product>

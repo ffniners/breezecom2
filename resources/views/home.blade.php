@@ -11,9 +11,6 @@
 $products = Statamic::tag('collection:products')->toJson(); 
 @endphp
     <div id="app">
-        <div>
-            wedwedwed
-        </div>
         <Home :products="{{ $products }}">
         </Home>
     </div>
